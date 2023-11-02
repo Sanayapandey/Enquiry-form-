@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-family: 'Trebuchet MS'
+        }
+
+        form {
+            width: 320px;
+            margin: auto;
+            box-shadow: 0px 0px 10px 2px #881818;
+            padding: 10px;
+        }
+
+        form h2 {
+            padding: 20px 10px;
+            
+
+        }
+
+        form label {
+            display: block;
+            font-size: 16px;
+
+        }
+
+        form input {
+            width: 100%;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        form button {
+
+            padding: 10px 25px;
+            background-color: rgb(45, 115, 65);
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .main {
+            width: 1220px;
+            display: flex;
+            flex-wrap: wrap;
+            margin: auto;
+
+        }
+
+        .items {
+            flex-basis: 20%;
+            margin: 1%;
+            box-shadow: 0px 0px 10px 2px #843b3b;
+            padding: 1%;
+            position: relative;
+        }
+
+        .items span {
+            position: absolute;
+            font-size: 25px;
+            cursor: pointer;
+
+            right: 0px;
+            top: 0px;
+        }
+
+
+
+
+
+
+
+        .items h5 {
+            margin-top: 10px;
+        }
+
+        button {
+            display: table;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="">
+        <h2>ENQUIRY NOW</h2>
+        <label for="">Name</label>
+        <input type="text" name="yourname" />
+
+        <label for="">Email</label>
+        <input type="email" name="email" />
+
+        <label for="">Phone</label>
+        <input type="text" name="phone" />
+
+        <label for="">Passward</label>
+        <input type="text" name="passward" />
+
+        <label for="">Gender</label>
+        <input type="text" name="gender" />
+        <button id="submit">SAVE</button>
+    </form>
+    <button id="call">Clear All</button>
+    <div class="main">
+        <div class="items">
+            <span>&times;</span>
+            <h2>Name</h2>
+            <div>san</div>
+
+            <h2>Email</h2>
+            <div>san@gmail.com</div>
+
+            <h2>Phone</h2>
+            <div>1080010810</div>
+
+            <h2>Passward</h2>
+            <div>san12</div>
+
+            <h2>Gender</h2>
+            <div>femail</div>
+
+        </div>
+    </div>
+</body>
+<script>
+    let user = [
+        {
+            'name': 'sp',
+            ' email': 'sp@gmail.com',
+        },
+        {
+            'name': 'sanaya',
+            ' email': 'sanaya@gmail.com',
+        }
+
+    ]
+
+
+    localStorage.setItem("name", JSON.stringify(user))
+    let form = document.querySelector("form")
+    let main = document.querySelector(".main");
+    let CALL = document.querySelector("#call")
+
+
+    form.addEventListener("submit", (event) => {
+        let name = event.target.yourname.value;
+        let email = event.target.email.value;
+        let phone = event.target.phone.value;
+        let passward = event.target.passward.value;
+        let gender = event.target.gender.value;
+        let checkstatus = 0;
+
+        let userData = JSON.parse(localStorage.getItem("userDetails")) ?? [];
+        for (let v of userData) {
+            // if (v.email == email || v.phone == phone || v.passward == passward) {
+            //     checkstatus = 1;
+            //     break;
+            // }
+              //if (v.name == name) {  
+               //  checkstatus = 1; // alag alag number isliye diye hai jisse pata chale email wala hai ya phone ya -->
+               //  break; 
+             //}  
+
+            if (v.email == email) {
+                checkstatus = 2;
+                break;
+            }
+            if (v.phone == phone) {
+                checkstatus = 3;
+                break;
+            }
+            if (v.passward == passward) {
+                checkstatus = 4;
+                break;
+            }
+
+        }
+        // agar check status 1 hai to ye
+        if (checkstatus == 1) {
+            alert("name  already exist");
+        }
+        else if (checkstatus == 2) {
+            alert("email  already exist"); // ya fir ye ho to
+        }
+        else if (checkstatus == 3) {
+            alert("phone already exist"); // ya fir ye hoto 
+        }
+        else if (checkstatus == 4) {
+            alert("passward already exist");  // ya fir ye
+        }
+        else {     // agra if shi hai to else wala part run hoga
+            userData.push({
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'passward': passward,
+                'gender': gender,
+            })
+            localStorage.setItem("userDetails", JSON.stringify(userData))
+            event.target.reset();
+        }
+        displayData();
+        event.preventDefault();
+    })
+
+
+    let displayData = () => {
+        let userdata = JSON.parse(localStorage.getItem("userDetails")) ?? [];
+        let finalData = '';
+        userdata.forEach((element, i) => {
+            finalData += `<div class="items">
+            <span onclick='removedata(${i})'>&times</span>
+            <h5>Name</h5>
+            <div>${element.name}</div>
+
+            <h5>Email</h5>
+            <div>${element.email}</div>
+            <h5>Phone</h5>
+            <div>${element.phone}</div>
+            <h5>Passward</h5>
+            <div>${element.passward}</div>
+            <h5>Gender</h5>
+            <div>${element.gender}</div>
+             </div>  `
+        });
+        main.innerHTML = finalData;
+    }
+
+
+    let removedata = (index) => {
+        let userData = JSON.parse(localStorage.getItem("userDetails")) ?? [];
+        userData.splice(index, 1);
+        localStorage.setItem("userDetails", JSON.stringify(userData))
+
+        displayData();
+    }
+
+
+    // call.addEventListener("click", () => {
+    //     localStorage.clear("userDetails");
+    //     displayData();
+    // })
+
+    CALL.addEventListener("click", () => {
+        localStorage.removeItem("userDetails");
+        displayData();
+    });
+    displayData();
+
+
+
+</script>
+
+</html>
